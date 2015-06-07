@@ -1,50 +1,68 @@
 package edu.dashkevich.diploma;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import edu.dashkevich.diploma.data.Text;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class XPathParser {
 
     private static final String HEAD_TAG_NAME = "head";
     public static final String TEXT_NODE_NAME = "#text";
-    private List<String> sentences = new ArrayList<String>();
-    private Set<String> nouns = new HashSet<String>();
+    private List<String> sentences;
+    private Set<String> nouns;
     private long allWords;
     private StringBuffer text;
+    private FileInputStream file;
+    private DocumentBuilderFactory builderFactory;
+    private DocumentBuilder builder;
+    private Document xmlDocument;
+    private XPath xPath;
+    private NodeList nodeList;
 
     public static void main(String[] args) throws Exception {
-        FileInputStream file = new FileInputStream(new File("C:\\Users\\Mr.Green\\Desktop\\download\\XML\\A8W.xml"));
-        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = builderFactory.newDocumentBuilder();
-        Document xmlDocument = builder.parse(file);
-        XPath xPath = XPathFactory.newInstance().newXPath();
-        NodeList nodeList = (NodeList) xPath.compile("/bncDoc/text/div1").evaluate(xmlDocument, XPathConstants.NODESET);
+        String path = "C:\\Users\\Mr.Green\\Desktop\\download\\XML\\A8W.xml";
         XPathParser xPathParser = new XPathParser();
-        xPathParser.runByDiv1Tags(nodeList);
+        xPathParser.parseText(path);
     }
 
-    public void parseText(String path) throws Exception{
-        FileInputStream file = new FileInputStream(new File(path));
-        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = builderFactory.newDocumentBuilder();
-        Document xmlDocument = builder.parse(file);
-        XPath xPath = XPathFactory.newInstance().newXPath();
-        NodeList nodeList = (NodeList) xPath.compile("/bncDoc/text/div1").evaluate(xmlDocument, XPathConstants.NODESET);
-        XPathParser xPathParser = new XPathParser();
-        xPathParser.runByDiv1Tags(nodeList);
+    public Text parseText(String path) throws Exception{
+        init(path);
+        runByDiv1Tags(nodeList);
+        return getText();
+    }
+
+    private Text getText() {
+        Text text = new Text();
+        text.setAllWords(allWords);
+        text.setNouns(new ArrayList<String>(nouns));
+        text.setSentences(sentences);
+        text.setText(text.toString());
+        return text;
+    }
+
+    private void init(String path) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+        file = new FileInputStream(new File(path));
+        builderFactory = DocumentBuilderFactory.newInstance();
+        builder = builderFactory.newDocumentBuilder();
+        xmlDocument = builder.parse(file);
+        xPath = XPathFactory.newInstance().newXPath();
+        nodeList = (NodeList) xPath.compile("/bncDoc/text/div1").evaluate(xmlDocument, XPathConstants.NODESET);
+        sentences = new ArrayList<String>();
+        nouns = new HashSet<String>();
+        text = new StringBuffer();
     }
 
 
@@ -55,11 +73,7 @@ public class XPathParser {
         System.out.println("Nouns counter:" + nouns.size());
         System.out.println("Sentences counter:" + sentences.size());
         System.out.println("All word in text:" + allWords);
-        Object[] sentencesArr = nouns.toArray();
-        for (Object word : sentencesArr) {
-            System.out.println(word);
-
-        }
+        System.out.println("Text:" + text.toString().length());
     }
 
     private void runByDiv1ChildTags(NodeList nodeList) {
@@ -96,6 +110,7 @@ public class XPathParser {
             allWords++;
             if (!wTags.item(k).getNodeName().equals(TEXT_NODE_NAME)) {
                 sentence.append(wTags.item(k).getTextContent());
+                text.append(wTags.item(k).getTextContent());
                 setNoun(wTags.item(k));
             }
         }
