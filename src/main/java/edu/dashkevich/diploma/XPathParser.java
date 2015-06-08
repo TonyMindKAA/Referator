@@ -1,7 +1,10 @@
 package edu.dashkevich.diploma;
 
-import java.io.*;
-import java.util.*;
+import edu.dashkevich.diploma.data.Text;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -10,13 +13,17 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import edu.dashkevich.diploma.data.Text;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
+// ?????? ????? ?????? xml-??? ? ????????? ?????, ??????? ????????? ? ??? ? ???? ???????
+// ??????? ? ???? <div1></div1> ?????? ????? ???????????, ??????????? ? ??? ?? ???????? ?????,
+// ???????? ?????? ?????????? - ????????? ????????? ????????????? ??????.
 public class XPathParser {
 
     private static final String HEAD_TAG_NAME = "head";
@@ -25,20 +32,9 @@ public class XPathParser {
     private Set<String> nouns;
     private long allWords;
     private StringBuffer text;
-    private FileInputStream file;
-    private DocumentBuilderFactory builderFactory;
-    private DocumentBuilder builder;
-    private Document xmlDocument;
-    private XPath xPath;
     private NodeList nodeList;
 
-    public static void main(String[] args) throws Exception {
-        String path = "C:\\Users\\Mr.Green\\Desktop\\download\\XML\\CCD.xml";
-        XPathParser xPathParser = new XPathParser();
-        xPathParser.parseText(path);
-    }
-
-    public Text parseText(String path) throws Exception{
+    public Text parseText(String path) throws Exception {
         init(path);
         runByDiv1Tags(nodeList);
         return getText();
@@ -54,11 +50,11 @@ public class XPathParser {
     }
 
     private void init(String path) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
-        file = new FileInputStream(new File(path));
-        builderFactory = DocumentBuilderFactory.newInstance();
-        builder = builderFactory.newDocumentBuilder();
-        xmlDocument = builder.parse(file);
-        xPath = XPathFactory.newInstance().newXPath();
+        FileInputStream file = new FileInputStream(new File(path));
+        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = builderFactory.newDocumentBuilder();
+        Document xmlDocument = builder.parse(file);
+        XPath xPath = XPathFactory.newInstance().newXPath();
         nodeList = (NodeList) xPath.compile("/bncDoc/text/div1").evaluate(xmlDocument, XPathConstants.NODESET);
         sentences = new ArrayList<String>();
         nouns = new HashSet<String>();
@@ -70,10 +66,6 @@ public class XPathParser {
         for (int i = 0; i < nodeList.getLength(); i++) {
             runByDiv1ChildTags(nodeList.item(i).getChildNodes());
         }
-        /*System.out.println("Nouns counter:" + nouns.size());
-        System.out.println("Sentences counter:" + sentences.size());
-        System.out.println("All word in text:" + allWords);
-        System.out.println("Text:" + text.toString().length());*/
     }
 
     private void runByDiv1ChildTags(NodeList nodeList) {

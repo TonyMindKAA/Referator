@@ -1,6 +1,7 @@
 package edu.dashkevich.diploma;
 
 import edu.dashkevich.diploma.data.KeyWord;
+import edu.dashkevich.diploma.data.Referat;
 import edu.dashkevich.diploma.data.Text;
 
 import java.util.ArrayList;
@@ -13,15 +14,24 @@ public class KeyWordsManager {
     private int min = 0;
     private int maxRange = 0;
     private int minRange = 0;
+    private Referat referatObj;
+    public KeyWordsManager(Referat referatObj) {
+        this.referatObj = referatObj;
+    }
 
     public List<KeyWord> getResultKeyWords(List<Text> texts) {
         List<String> keyWords = removeDuplicate(texts);
         List<KeyWord> resultKeyWords = new ArrayList<KeyWord>();
         setIDF(texts, keyWords, resultKeyWords);
         computingMinMaxRanges();
-        System.out.println(resultKeyWords.size() + " before filtering");
-        System.out.println(minRange+" mi::ma "+maxRange);
-        return filterByMinMaxRange(resultKeyWords);
+        referatObj.setAllKeyWords(resultKeyWords);
+        referatObj.setMax(max);
+        referatObj.setMin(min);
+        referatObj.setMaxRange(maxRange);
+        referatObj.setMinRange(minRange);
+        List<KeyWord> fiteringKeyWords = filterByMinMaxRange(resultKeyWords);
+        referatObj.setFilteringKeyWords(fiteringKeyWords);
+        return fiteringKeyWords;
     }
 
     private List<KeyWord> filterByMinMaxRange(List<KeyWord> resultKeyWords) {
