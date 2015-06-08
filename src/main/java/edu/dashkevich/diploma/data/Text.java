@@ -4,10 +4,19 @@ import java.util.List;
 import java.util.Set;
 
 public class Text {
+    private String fileName;
     private List<String> sentences;
     private List<String> nouns;
     private long allWords;
     private String text;
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     public List<String> getSentences() {
         return sentences;
@@ -44,7 +53,8 @@ public class Text {
     @Override
     public String toString() {
         return "Text{" +
-                "sentences=" + sentences +
+                "fileName='" + fileName + '\'' +
+                ", sentences=" + sentences +
                 ", nouns=" + nouns +
                 ", allWords=" + allWords +
                 ", text='" + text + '\'' +

@@ -33,7 +33,7 @@ public class XPathParser {
     private NodeList nodeList;
 
     public static void main(String[] args) throws Exception {
-        String path = "C:\\Users\\Mr.Green\\Desktop\\download\\XML\\A8W.xml";
+        String path = "C:\\Users\\Mr.Green\\Desktop\\download\\XML\\CCD.xml";
         XPathParser xPathParser = new XPathParser();
         xPathParser.parseText(path);
     }
@@ -49,7 +49,7 @@ public class XPathParser {
         text.setAllWords(allWords);
         text.setNouns(new ArrayList<String>(nouns));
         text.setSentences(sentences);
-        text.setText(text.toString());
+        text.setText(this.text.toString());
         return text;
     }
 
@@ -70,10 +70,10 @@ public class XPathParser {
         for (int i = 0; i < nodeList.getLength(); i++) {
             runByDiv1ChildTags(nodeList.item(i).getChildNodes());
         }
-        System.out.println("Nouns counter:" + nouns.size());
+        /*System.out.println("Nouns counter:" + nouns.size());
         System.out.println("Sentences counter:" + sentences.size());
         System.out.println("All word in text:" + allWords);
-        System.out.println("Text:" + text.toString().length());
+        System.out.println("Text:" + text.toString().length());*/
     }
 
     private void runByDiv1ChildTags(NodeList nodeList) {
@@ -118,9 +118,14 @@ public class XPathParser {
     }
 
     private void setNoun(Node wTag) {
-        String wTagAttribute = wTag.getAttributes().getNamedItem("type").getNodeValue();
-        if (wTagAttribute.equals("NN1") || wTagAttribute.equals("NN2") || wTagAttribute.equals("NP1")) {
-            nouns.add(wTag.getTextContent().toLowerCase());
+        if (wTag != null) {
+            Node type = wTag.getAttributes().getNamedItem("type");
+            if (type != null) {
+                String wTagAttribute = type.getNodeValue();
+                if (wTagAttribute != null && (wTagAttribute.equals("NN1") || wTagAttribute.equals("NN2") || wTagAttribute.equals("NP1"))) {
+                    nouns.add(wTag.getTextContent().toLowerCase());
+                }
+            }
         }
     }
 }
