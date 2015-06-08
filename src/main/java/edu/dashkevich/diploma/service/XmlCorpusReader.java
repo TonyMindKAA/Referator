@@ -1,4 +1,4 @@
-package edu.dashkevich.diploma;
+package edu.dashkevich.diploma.service;
 
 import com.google.common.base.Preconditions;
 import edu.dashkevich.diploma.data.Text;

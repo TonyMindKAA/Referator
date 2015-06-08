@@ -1,7 +1,6 @@
 package edu.dashkevich.diploma.data;
 
 import java.util.List;
-import java.util.Set;
 
 public class Text {
     private String fileName;

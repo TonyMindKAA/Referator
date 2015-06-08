@@ -1,4 +1,4 @@
-package edu.dashkevich.diploma;
+package edu.dashkevich.diploma.service;
 
 import edu.dashkevich.diploma.data.Text;
 import org.w3c.dom.Document;

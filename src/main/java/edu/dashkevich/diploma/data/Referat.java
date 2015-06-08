@@ -106,17 +106,21 @@ public class Referat {
 
     @Override
     public String toString() {
-        return  "[File numbers]: " + allText.size() +
-                "\n[Key words before filtering]: " + allKeyWords.size() +
-                "\n[Key words after filtering]:" + filteringKeyWords.size() +
-                "\n[General max idf]: " + max +
-                "\n[General min idf]: " + min +
-                "\n[Max range idf]: " + maxRange +
-                "\n[Min range idf]: " + minRange +
-                "\n[Number sentence from all text]: " + numberSentenceFromAllText +
-                "\n[Number sentence frome referat]: " + numberSentenceFromeReferat +
-                "\n[Text zip]: " + (((double)numberSentenceFromeReferat/(double)numberSentenceFromAllText)*100) +
-                "%\n[Text of referat]:\n " +referat;
+        return
+                "\n[---------------------------------------------] " +
+                "\n[---------------[Informations]----------------] " +
+                "\n[---------------------------------------------] " +
+                "\n|------>[File numbers]: " + allText.size() +
+                "\n|------>[Key words before filtering]: " + allKeyWords.size() +
+                "\n|------>[Key words after filtering]:" + filteringKeyWords.size() +
+                "\n|------>[General max idf]: " + max +
+                "\n|------>[General min idf]: " + min +
+                "\n|------>[Max range idf]: " + maxRange +
+                "\n|------>[Min range idf]: " + minRange +
+                "\n|------>[Number sentence from all text]: " + numberSentenceFromAllText +
+                "\n|------>[Number sentence frome referat]: " + numberSentenceFromeReferat +
+                "\n|------>[Text zip]: " + (((double)numberSentenceFromeReferat/(double)numberSentenceFromAllText)*100)+"%"+
+                "\n|------>[Text of referat]:\n " +referat;
 
     }
 }
